@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DryIceAC Project Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-bg: #f9f9f9;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-color) !important;
+        }
+        
+        .dashboard-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .stats-card {
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-card .card-body {
+            padding: 20px;
+        }
+        
+        .stats-card .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .stats-card .count {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .stats-card .label {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .task-list {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .timeline-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--primary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .container-timeline {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        
+        .container-timeline::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -13px;
+            background-color: white;
+            border: 4px solid var(--primary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid white;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+        }
+        
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+        
+        .right::after {
+            left: -12px;
+        }
+        
+        .content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .task-checkbox {
+            margin-right: 10px;
+        }
+        
+        .file-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .file-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+        
+        .file-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        
+        .file-icon {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .progress-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .progress {
+            height: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .tab-pane {
+            padding: 20px 0;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--secondary-color);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        footer {
+            margin-top: 30px;
+            padding: 20px 0;
+            text-align: center;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Mobile responsive adjustments */
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .container-timeline {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .container-timeline::before {
+                left: 60px;
+                border: medium solid white;
+                border-width: 10px 10px 10px 0;
+                border-color: transparent white transparent transparent;
+            }
+            
+            .left::after, .right::after {
+                left: 18px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+        
+        .markdown-content h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .markdown-content h2 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--secondary-color);
+        }
+        
+        .markdown-content h3 {
+            font-size: 1.2rem;
+            margin-top: 1.2rem;
+            color: var(--secondary-color);
+        }
+        
+        .markdown-content ul, .markdown-content ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .markdown-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .markdown-content blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            color: #555;
+        }
+        
+        .auth-container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="auth-section" class="auth-container">
+        <h2 class="text-center mb-4">DryIceAC Project Dashboard</h2>
+        <p class="mb-4">To access your project dashboard, please enter your GitHub Personal Access Token. This token will be used to securely access your repository information.</p>
+        
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Your token is stored only in your browser and is never sent to any server other than GitHub API.
+        </div>
+        
+        <div class="mb-3">
+            <label for="github-token" class="form-label">GitHub Personal Access Token</label>
+            <input type="password" class="form-control" id="github-token" placeholder="ghp_yourTokenHere">
+            <div class="form-text">
+                You can create a new token in your <a href="https://github.com/settings/tokens" target="_blank">GitHub settings</a>.
+                <br>Required permissions: repo (full control)
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="github-repo" class="form-label">Repository</label>
+            <input type="text" class="form-control" id="github-repo" value="moverandshker/DryIceAC_Project" readonly>
+        </div>
+        
+        <button id="login-btn" class="btn btn-primary w-100">Access Dashboard</button>
+    </div>
+
+    <div id="dashboard-section" style="display: none;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="#"><i class="bi bi-snow"></i> DryIceAC Project</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/moverandshker/DryIceAC_Project" target="_blank">
+                                <i class="bi bi-github"></i> GitHub
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="logout-btn">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mb-4">
+            <div class="dashboard-header">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>Edmonton Market Launch</h1>
+                        <p class="text-muted">Dry Ice AC Cleaning Service - Project Dashboard</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="mb-0"><strong>Launch Date:</strong> <span id="launch-date">In two weeks</span></p>
+                        <p class="mb-0"><strong>Current Phase:</strong> <span id="current-phase">Market assessment and marketing strategy</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">Overview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab">Tasks</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="timeline-tab" data-bs-toggle="tab" data-bs-target="#timeline" type="button" role="tab">Timeline</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="files-tab" data-bs-toggle="tab" data-bs-target="#files" type="button" role="tab">Files</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab">Documents</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="myTabContent">
+                <!-- Overview Tab -->
+                <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-4">
+                            <div class="card stats-card bg-primary text-white">
+                                <div class="card-body text-center">
+                                    <div class="icon">
+                                        <i class="bi bi-list-check"></i>
+                                    </div>
+                                    <div class="count" id="completed-tasks">0/0</div>
+                                    <div class="label">Tasks Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card stats-card bg-success text-white">
+                                <div class="card-body text-center">
+                                    <div class="icon">
+                                        <i class="bi bi-calendar-check"></i>
+                                    </div>
+                                    <div class="count" id="days-to-launch">14</div>
+                                    <div class="label">Days to Launch</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card stats-card bg-warning text-white">
+                                <div class="card-body text-center">
+                                    <div class="icon">
+                                        <i class="bi bi-file-earmark-text"></i>
+                                    </div>
+                                    <div class="count" id="document-count">0</div>
+                                    <div class="label">Documents</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card stats-card bg-info text-white">
+                                <div class="card-body text-center">
+                                    <div class="icon">
+                                        <i class="bi bi-git"></i>
+                                    </div>
+                                    <div class="count" id="commit-count">0</div>
+                                    <div class="label">Commits</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="progress-container">
+                                <h4>Project Progress</h4>
+                                <div class="progress">
+                                    <div class="progress-bar" id="overall-progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-6">
+                                        <h5>Pre-Launch</h5>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-warning" id="prelaunch-progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5>Marketing</h5>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" id="marketing-progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <h5>Content</h5>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" id="content-progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5>Website</h5>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" id="website-progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-list">
+                                <h4>Upcoming Tasks</h4>
+                                <ul class="list-group list-group-flush" id="upcoming-tasks-list">
+                                    <li class="list-group-item text-center">Loading tasks...</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="mb-0">Project Overview</h4>
+                                </div>
+                                <div class="card-body markdown-content" id="project-overview">
+                                    Loading project information...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tasks Tab -->
+                <div class="tab-pane fade" id="tasks" role="tabpanel">
+                    <div class="task-list">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4>Project Tasks</h4>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary btn-sm task-filter active" data-filter="all">All</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm task-filter" data-filter="incomplete">Incomplete</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm task-filter" data-filter="complete">Complete</button>
+                            </div>
+                        </div>
+                        <div id="all-tasks-container">
+                            Loading task list...
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Timeline Tab -->
+                <div class="tab-pane fade" id="timeline" role="tabpanel">
+                    <div class="timeline-container">
+                        <h4 class="mb-4">Project Timeline</h4>
+                        <div class="timeline" id="timeline-content">
+                            Loading timeline...
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Files Tab -->
+                <div class="tab-pane fade" id="files" role="tabpanel">
+                    <div class="file-container">
+                        <h4 class="mb-4">Project Files</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Search files..." id="file-search">
+                            <button class="btn btn-outline-secondary" type="button" id="refresh-files">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="list-group" id="file-list">
+                            Loading files...
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Documents Tab -->
+                <div class="tab-pane fade" id="documents" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="list-group document-nav" id="document-list">
+                                Loading documents...
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4 class="mb-0" id="document-title">Select a document</h4>
+                                    <a href="#" class="btn btn-sm btn-outline-primary" id="edit-document-btn" style="display: none;">
+                                        <i class="bi bi-pencil"></i> Edit on GitHub
+                                    </a>
+                                </div>
+                                <div class="card-body markdown-content" id="document-content">
+                                    <p class="text-muted">Please select a document from the list to view its contents.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="container">
+            <p>DryIceAC Project Dashboard &copy; 2025 | <a href="https://github.com/moverandshker/DryIceAC_Project" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // GitHub API client
+        class GitHubClient {
+            constructor(token) {
+                this.token = token;
+                this.repoPath = 'moverandshker/DryIceAC_Project';
+                this.apiBase = 'https://api.github.com';
+            }
+            
+            async fetchAPI(endpoint, options = {}) {
+                const url = this.apiBase + endpoint;
+                const headers = {
+                    'Authorization': `token ${this.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    ...options.headers
+                };
+                
+                try {
+                    const response = await fetch(url, {
+                        ...options,
+                        headers
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('API error:', error);
+                    throw error;
+                }
+            }
+            
+            async getRepoContents(path = '') {
+                return this.fetchAPI(`/repos/${this.repoPath}/contents/${path}`);
+            }
+            
+            async getFileContent(path) {
+                const result = await this.fetchAPI(`/repos/${this.repoPath}/contents/${path}`);
+                if (result.content) {
+                    // Decode base64 content
+                    return atob(result.content);
+                }
+                return null;
+            }
+            
+            async getCommits() {
+                return this.fetchAPI(`/repos/${this.repoPath}/commits`);
+            }
+        }
+        
+        // Dashboard Controller
+        class DashboardController {
+            constructor() {
+                this.github = null;
+                this.tasks = [];
+                this.documents = [];
+                this.setupEventListeners();
+                this.checkAuthentication();
+            }
+            
+            setupEventListeners() {
+                // Auth section
+                document.getElementById('login-btn').addEventListener('click', () => this.authenticate());
+                document.getElementById('logout-btn').addEventListener('click', () => this.logout());
+                
+                // Files tab
+                document.getElementById('refresh-files').addEventListener('click', () => this.loadFiles());
+                document.getElementById('file-search').addEventListener('input', (e) => this.filterFiles(e.target.value));
+                
+                // Tasks tab
+                document.querySelectorAll('.task-filter').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.task-filter').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.filterTasks(e.target.dataset.filter);
+                    });
+                });
+            }
+            
+            checkAuthentication() {
+                const token = localStorage.getItem('github_token');
+                if (token) {
+                    this.authenticate(token);
+                }
+            }
+            
+            authenticate(savedToken = null) {
+                const token = savedToken || document.getElementById('github-token').value.trim();
+                
+                if (!token) {
+                    alert('Please enter a GitHub Personal Access Token');
+                    return;
+                }
+                
+                this.github = new GitHubClient(token);
+                
+                // Test the token by getting repo information
+                this.github.fetchAPI(`/repos/${this.github.repoPath}`)
+                    .then(() => {
+                        // Token is valid
+                        localStorage.setItem('github_token', token);
+                        document.getElementById('auth-section').style.display = 'none';
+                        document.getElementById('dashboard-section').style.display = 'block';
+                        this.loadDashboard();
+                    })
+                    .catch(error => {
+                        alert('Authentication failed: ' + error.message);
+                        this.github = null;
+                    });
+            }
+            
+            logout() {
+                localStorage.removeItem('github_token');
+                document.getElementById('auth-section').style.display = 'block';
+                document.getElementById('dashboard-section').style.display = 'none';
+                document.getElementById('github-token').value = '';
+                this.github = null;
+            }
+            
+            async loadDashboard() {
+                try {
+                    await Promise.all([
+                        this.loadProjectInfo(),
+                        this.loadTasks(),
+                        this.loadFiles(),
+                        this.loadTimeline(),
+                        this.loadDocuments(),
+                        this.loadCommits()
+                    ]);
+                    this.updateProgressBars();
+                } catch (error) {
+                    console.error('Error loading dashboard:', error);
+                    alert('Error loading dashboard: ' + error.message);
+                }
+            }
+            
+            async loadProjectInfo() {
+                const content = await this.github.getFileContent('project_plan.md');
+                document.getElementById('project-overview').innerHTML = marked.parse(content);
+            }
+            
+            async loadTasks() {
+                try {
+                    const content = await this.github.getFileContent('tasks.md');
+                    const taskMatches = content.match(/- \[([ x])\] (.*)/g);
+                    
+                    if (taskMatches) {
+                        this.tasks = taskMatches.map(task => {
+                            const match = task.match(/- \[([ x])\] (.*)/);
+                            return {
+                                completed: match[1] === 'x',
+                                text: match[2]
+                            };
+                        });
+                        
+                        this.renderTasks();
+                        this.updateTaskStats();
+                    }
+                } catch (error) {
+                    console.error('Error loading tasks:', error);
+                }
+            }
+            
+            renderTasks() {
+                // All tasks
+                const allTasksContainer = document.getElementById('all-tasks-container');
+                let tasksHTML = '';
+                
+                // Group tasks by categories (based on headings)
+                let currentCategory = 'Uncategorized';
+                let categories = {};
+                
+                const taskContent = this.github.getFileContent('tasks.md')
+                    .then(content => {
+                        const lines = content.split('\n');
+                        
+                        for (let i = 0; i < lines.length; i++) {
+                            const line = lines[i];
+                            
+                            if (line.startsWith('##')) {
+                                currentCategory = line.replace(/^##\s+/, '');
+                                categories[currentCategory] = [];
+                            } else if (line.startsWith('###')) {
+                                currentCategory = line.replace(/^###\s+/, '');
+                                if (!categories[currentCategory]) {
+                                    categories[currentCategory] = [];
+                                }
+                            } else if (line.match(/- \[([ x])\] (.*)/)) {
+                                const match = line.match(/- \[([ x])\] (.*)/);
+                                categories[currentCategory].push({
+                                    completed: match[1] === 'x',
+                                    text: match[2]
+                                });
+                            }
+                        }
+                        
+                        // Render tasks by category
+                        for (const category in categories) {
+                            if (categories[category].length > 0) {
+                                tasksHTML += `<h5 class="mt-4 mb-3">${category}</h5>`;
+                                tasksHTML += '<div class="list-group mb-4">';
+                                
+                                categories[category].forEach((task, index) => {
+                                    tasksHTML += `
+                                        <div class="list-group-item">
+                                            <div class="form-check">
+                                                <input class="form-check-input task-checkbox" type="checkbox" 
+                                                    ${task.completed ? 'checked' : ''} 
+                                                    data-category="${category}" 
+                                                    data-index="${index}" 
+                                                    id="task-${category.replace(/\s+/g, '-')}-${index}">
+                                                <label class="form-check-label ${task.completed ? 'text-decoration-line-through text-muted' : ''}" 
+                                                    for="task-${category.replace(/\s+/g, '-')}-${index}">
+                                                    ${task.text}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    `;
+                                });
+                                
+                                tasksHTML += '</div>';
+                            }
+                        }
+                        
+                        allTasksContainer.innerHTML = tasksHTML;
+                        
+                        // Add event listeners for task checkboxes
+                        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                            checkbox.addEventListener('change', (e) => this.toggleTaskStatus(e.target));
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error rendering tasks:', error);
+                        allTasksContainer.innerHTML = '<div class="alert alert-danger">Failed to load tasks</div>';
+                    });
+                
+                // Upcoming tasks (just show 5 incomplete tasks)
+                const upcomingTasksList = document.getElementById('upcoming-tasks-list');
+                const incompleteTasks = this.tasks.filter(task => !task.completed).slice(0, 5);
+                
+                if (incompleteTasks.length > 0) {
+                    upcomingTasksList.innerHTML = incompleteTasks.map(task => 
+                        `<li class="list-group-item d-flex align-items-center">
+                            <span class="badge rounded-pill bg-primary me-2">Todo</span>
+                            ${task.text}
+                        </li>`
+                    ).join('');
+                } else {
+                    upcomingTasksList.innerHTML = '<li class="list-group-item text-center">No upcoming tasks</li>';
+                }
+            }
+            
+            toggleTaskStatus(checkbox) {
+                // This would update the task status in GitHub, but for now just visual update
+                const isCompleted = checkbox.checked;
+                const label = checkbox.nextElementSibling;
+                
+                if (isCompleted) {
+                    label.classList.add('text-decoration-line-through', 'text-muted');
+                } else {
+                    label.classList.remove('text-decoration-line-through', 'text-muted');
+                }
+                
+                // Update statistics
+                this.updateTaskStats();
+            }
+            
+            updateTaskStats() {
+                const totalTasks = this.tasks.length;
+                const completedTasks = this.tasks.filter(task => task.completed).length;
+                document.getElementById('completed-tasks').textContent = `${completedTasks}/${totalTasks}`;
+                
+                // Update progress bar
+                const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+                document.getElementById('overall-progress').style.width = `${completionPercentage}%`;
+                document.getElementById('overall-progress').textContent = `${completionPercentage}%`;
+                document.getElementById('overall-progress').setAttribute('aria-valuenow', completionPercentage);
+            }
+            
+            filterTasks(filter) {
+                const tasks = document.querySelectorAll('.task-checkbox');
+                
+                if (filter === 'all') {
+                    tasks.forEach(task => {
+                        task.closest('.list-group-item').style.display = 'block';
+                    });
+                } else if (filter === 'complete') {
+                    tasks.forEach(task => {
+                        task.closest('.list-group-item').style.display = task.checked ? 'block' : 'none';
+                    });
+                } else if (filter === 'incomplete') {
+                    tasks.forEach(task => {
+                        task.closest('.list-group-item').style.display = !task.checked ? 'block' : 'none';
+                    });
+                }
+            }
+            
+            async loadFiles() {
+                const fileList = document.getElementById('file-list');
+                fileList.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary" role="status"></div></div>';
+                
+                try {
+                    // Get root directory contents
+                    const contents = await this.github.getRepoContents();
+                    
+                    // Also get marketing directory contents
+                    const marketingContents = await this.github.getRepoContents('marketing');
+                    
+                    // Combine and sort alphabetically
+                    const files = [...contents, ...marketingContents].sort((a, b) => {
+                        // Directories first
+                        if (a.type !== b.type) {
+                            return a.type === 'dir' ? -1 : 1;
+                        }
+                        // Then alphabetically by name
+                        return a.name.localeCompare(b.name);
+                    });
+                    
+                    // Render the file list
+                    if (files.length > 0) {
+                        const fileItems = files.map(file => {
+                            let icon = '';
+                            
+                            if (file.type === 'dir') {
+                                icon = '<i class="bi bi-folder file-icon"></i>';
+                            } else if (file.name.endsWith('.md')) {
+                                icon = '<i class="bi bi-file-earmark-text file-icon"></i>';
+                            } else if (file.name.endsWith('.html')) {
+                                icon = '<i class="bi bi-file-earmark-code file-icon"></i>';
+                            } else if (file.name.endsWith('.json')) {
+                                icon = '<i class="bi bi-file-earmark-code file-icon"></i>';
+                            } else {
+                                icon = '<i class="bi bi-file-earmark file-icon"></i>';
+                            }
+                            
+                            return `
+                                <a href="${file.html_url}" class="list-group-item list-group-item-action file-item" target="_blank">
+                                    ${icon} ${file.path}
+                                    <span class="badge rounded-pill bg-light text-dark float-end">${file.type}</span>
+                                </a>
+                            `;
+                        }).join('');
+                        
+                        fileList.innerHTML = fileItems;
+                    } else {
+                        fileList.innerHTML = '<div class="text-center py-3">No files found in the repository</div>';
+                    }
+                } catch (error) {
+                    console.error('Error loading files:', error);
+                    fileList.innerHTML = '<div class="alert alert-danger">Failed to load files</div>';
+                }
+            }
+            
+            filterFiles(query) {
+                const fileItems = document.querySelectorAll('.file-item');
+                query = query.toLowerCase();
+                
+                fileItems.forEach(item => {
+                    const fileName = item.textContent.toLowerCase();
+                    item.style.display = fileName.includes(query) ? 'block' : 'none';
+                });
+            }
+            
+            async loadTimeline() {
+                const timelineContent = document.getElementById('timeline-content');
+                
+                try {
+                    const content = await this.github.getFileContent('timeline.md');
+                    const timelineData = this.parseTimelineFromMarkdown(content);
+                    
+                    if (timelineData.length > 0) {
+                        let timelineHTML = '';
+                        
+                        timelineData.forEach((item, index) => {
+                            const position = index % 2 === 0 ? 'left' : 'right';
+                            const date = item.date || 'Upcoming';
+                            
+                            timelineHTML += `
+                                <div class="container-timeline ${position}">
+                                    <div class="content">
+                                        <h3>${item.title}</h3>
+                                        <p>${date}</p>
+                                        <p>${item.description}</p>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        timelineContent.innerHTML = timelineHTML;
+                    } else {
+                        timelineContent.innerHTML = '<div class="text-center py-3">No timeline data available</div>';
+                    }
+                } catch (error) {
+                    console.error('Error loading timeline:', error);
+                    timelineContent.innerHTML = '<div class="alert alert-danger">Failed to load timeline</div>';
+                }
+            }
+            
+            parseTimelineFromMarkdown(content) {
+                const timelineData = [];
+                const lines = content.split('\n');
+                
+                let currentPhase = '';
+                let currentWeek = '';
+                let currentDay = '';
+                let currentDescription = [];
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    
+                    if (line.startsWith('## ')) {
+                        // Phase heading
+                        currentPhase = line.replace(/^## /, '');
+                    } else if (line.startsWith('### ')) {
+                        // Week heading
+                        currentWeek = line.replace(/^### /, '');
+                    } else if (line.startsWith('- **Day')) {
+                        // Day entry
+                        // If we have a previous day, save it
+                        if (currentDay && currentDescription.length > 0) {
+                            timelineData.push({
+                                title: `${currentPhase} - ${currentDay}`,
+                                date: currentWeek,
+                                description: currentDescription.join('<br>')
+                            });
+                            currentDescription = [];
+                        }
+                        
+                        currentDay = line.match(/- \*\*(.*?):\*\*/)[1];
+                    } else if (line.startsWith('  - ') && currentDay) {
+                        // Task under a day
+                        currentDescription.push(line.replace(/^\s+- /, ''));
+                    }
+                }
+                
+                // Add the last day
+                if (currentDay && currentDescription.length > 0) {
+                    timelineData.push({
+                        title: `${currentPhase} - ${currentDay}`,
+                        date: currentWeek,
+                        description: currentDescription.join('<br>')
+                    });
+                }
+                
+                // Also extract milestones
+                const milestoneSection = content.split('## Key Milestones')[1];
+                if (milestoneSection) {
+                    const milestoneLines = milestoneSection.split('\n');
+                    for (let i = 0; i < milestoneLines.length; i++) {
+                        const line = milestoneLines[i].trim();
+                        if (line.match(/^\d+\. \*\*(.*?):\*\* (.*)/)) {
+                            const match = line.match(/^\d+\. \*\*(.*?):\*\* (.*)/);
+                            timelineData.push({
+                                title: `Milestone: ${match[1]}`,
+                                date: 'Key Milestone',
+                                description: match[2]
+                            });
+                        }
+                    }
+                }
+                
+                return timelineData;
+            }
+            
+            async loadDocuments() {
+                const documentList = document.getElementById('document-list');
+                
+                try {
+                    // Get markdown files
+                    const files = await this.collectMarkdownFiles();
+                    this.documents = files.filter(file => file.name.endsWith('.md'));
+                    
+                    document.getElementById('document-count').textContent = this.documents.length;
+                    
+                    if (this.documents.length > 0) {
+                        const documentItems = this.documents.map(doc => {
+                            const displayName = doc.name.replace('.md', '');
+                            return `
+                                <a href="#" class="list-group-item list-group-item-action document-item" data-path="${doc.path}">
+                                    <i class="bi bi-file-earmark-text file-icon"></i> ${displayName}
+                                </a>
+                            `;
+                        }).join('');
+                        
+                        documentList.innerHTML = documentItems;
+                        
+                        // Add event listeners
+                        document.querySelectorAll('.document-item').forEach(item => {
+                            item.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                this.loadDocumentContent(e.target.dataset.path);
+                                
+                                // Update active state
+                                document.querySelectorAll('.document-item').forEach(d => d.classList.remove('active'));
+                                e.target.classList.add('active');
+                            });
+                        });
+                    } else {
+                        documentList.innerHTML = '<div class="list-group-item">No documents found</div>';
+                    }
+                } catch (error) {
+                    console.error('Error loading documents:', error);
+                    documentList.innerHTML = '<div class="list-group-item text-danger">Failed to load documents</div>';
+                }
+            }
+            
+            async collectMarkdownFiles() {
+                // Get root markdown files
+                const rootContents = await this.github.getRepoContents();
+                const rootMdFiles = rootContents.filter(file => file.name.endsWith('.md'));
+                
+                // Get marketing markdown files
+                try {
+                    const marketingContents = await this.github.getRepoContents('marketing');
+                    const marketingMdFiles = marketingContents.filter(file => file.name.endsWith('.md'));
+                    
+                    // Combine and sort
+                    return [...rootMdFiles, ...marketingMdFiles].sort((a, b) => a.name.localeCompare(b.name));
+                } catch (error) {
+                    // Marketing directory might not exist
+                    console.log('No marketing directory found');
+                    return rootMdFiles;
+                }
+            }
+            
+            async loadDocumentContent(path) {
+                const docTitle = document.getElementById('document-title');
+                const docContent = document.getElementById('document-content');
+                const editBtn = document.getElementById('edit-document-btn');
+                
+                docContent.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary" role="status"></div></div>';
+                
+                try {
+                    const content = await this.github.getFileContent(path);
+                    const fileName = path.split('/').pop().replace('.md', '');
+                    
+                    docTitle.textContent = fileName;
+                    docContent.innerHTML = marked.parse(content);
+                    
+                    // Update edit button
+                    editBtn.href = `https://github.com/${this.github.repoPath}/edit/main/${path}`;
+                    editBtn.style.display = 'inline-block';
+                } catch (error) {
+                    console.error('Error loading document:', error);
+                    docContent.innerHTML = '<div class="alert alert-danger">Failed to load document content</div>';
+                }
+            }
+            
+            async loadCommits() {
+                try {
+                    const commits = await this.github.getCommits();
+                    document.getElementById('commit-count').textContent = commits.length;
+                } catch (error) {
+                    console.error('Error loading commits:', error);
+                }
+            }
+            
+            updateProgressBars() {
+                // Sample progress values (in a real app, these would be calculated)
+                const prelaunch = 25;
+                const marketing = 40;
+                const content = 75;
+                const website = 10;
+                
+                // Overall progress (average of the four areas)
+                const overall = Math.round((prelaunch + marketing + content + website) / 4);
+                
+                // Update the progress bars
+                document.getElementById('prelaunch-progress').style.width = `${prelaunch}%`;
+                document.getElementById('prelaunch-progress').textContent = `${prelaunch}%`;
+                document.getElementById('prelaunch-progress').setAttribute('aria-valuenow', prelaunch);
+                
+                document.getElementById('marketing-progress').style.width = `${marketing}%`;
+                document.getElementById('marketing-progress').textContent = `${marketing}%`;
+                document.getElementById('marketing-progress').setAttribute('aria-valuenow', marketing);
+                
+                document.getElementById('content-progress').style.width = `${content}%`;
+                document.getElementById('content-progress').textContent = `${content}%`;
+                document.getElementById('content-progress').setAttribute('aria-valuenow', content);
+                
+                document.getElementById('website-progress').style.width = `${website}%`;
+                document.getElementById('website-progress').textContent = `${website}%`;
+                document.getElementById('website-progress').setAttribute('aria-valuenow', website);
+                
+                document.getElementById('overall-progress').style.width = `${overall}%`;
+                document.getElementById('overall-progress').textContent = `${overall}%`;
+                document.getElementById('overall-progress').setAttribute('aria-valuenow', overall);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            new DashboardController();
+        });
+    </script>
+</body>
+</html>
